@@ -6,21 +6,33 @@
 $query = "SELECT * ";
 $query .= "FROM subjects ";
 $query .= "WHERE visible = 1 ";
-$result = mysqli_query($connection, $query);
-confirm_query($result);
-
+$subjects_set = mysqli_query($connection, $query);
+confirm_query($subjects_set);
 ?>
-
 
 <!DOCTYPE html>
 
 <div id="main">
     <div id="navigation">
         <?php
-        while ($subjects = mysqli_fetch_assoc($result)){
-
-        ?>
-        <li><?php echo $subjects['menu_name']?></li>
+        while ($subjects = mysqli_fetch_assoc($subjects_set)){
+            ?>
+        <li>
+            <?php echo $subjects['menu_name'] ;?>
+            <?php
+            $query = "SELECT * ";
+            $query .= "FROM pages ";
+            $query .= "WHERE visible = 1 ";
+            $query .= "AND subject_id = {$subjects["id"]} ";
+            $page_set = mysqli_query($connection, $query);
+            confirm_query($page_set);
+            ?>
+            <ul>
+                <?php while ($page = mysqli_fetch_assoc($page_set)){  ?>
+                <li>  <?php echo $page['menu_name'] ;?>  </li>
+                <?php } ?>
+            </ul>
+        </li>
         <?php } ?>
     </div>
     <div id="page">
